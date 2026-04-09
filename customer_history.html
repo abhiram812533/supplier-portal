@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Orders</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="glass" style="width:80%;">
+  <h2>My Order History</h2>
+
+  <table border="1" width="100%" style="font-size:18px;">
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Total</th>
+      <th>Payment</th>
+      <th>Date</th>
+    </tr>
+
+    {% for h in history %}
+    <tr>
+      <td>{{ h[0] }}</td>
+      <td>{{ h[1] }}</td>
+      <td>₹{{ h[2] }}</td>
+      <td>{{ h[3] }}</td>
+      <td>{{ h[4] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <br>
+  <a href="/customer"><button>⬅ Back</button></a>
+</div>
+
+</body>
+</html>

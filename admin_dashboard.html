@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- PROFILE ICON (TOP RIGHT) -->
+<div style="position:fixed; top:20px; right:30px; z-index:1000;">
+  <button onclick="toggleProfile()"
+          style="border-radius:50%; width:50px; height:50px; font-size:20px;">
+    👤
+  </button>
+
+  <div id="profileMenu" class="glass"
+       style="display:none; width:220px; margin-top:10px;">
+    <a href="/add-product"><button>Add Product</button></a>
+    <a href="/add-customer"><button>Add Customer</button></a>
+    <a href="/change-password"><button>Change Password</button></a>
+    <a href="/logout"><button>Logout</button></a>
+  </div>
+</div>
+
+<script>
+function toggleProfile(){
+  let menu = document.getElementById("profileMenu");
+  menu.style.display = (menu.style.display === "none") ? "block" : "none";
+}
+</script>
+
+<!-- MAIN DASHBOARD -->
+<div class="glass" style="width:90%; margin-top:100px;">
+
+  <h1>Admin Dashboard</h1>
+
+  <!-- ORDERS TABLE -->
+  <h2>Orders Summary</h2>
+
+  <table border="1" width="100%" style="font-size:18px;">
+    <tr>
+      <th>Customer Name</th>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Total Amount</th>
+      <th>Payment</th>
+    </tr>
+
+    {% for o in orders %}
+    <tr>
+      <td>{{ o[0] }}</td>
+      <td>{{ o[1] }}</td>
+      <td>{{ o[2] }}</td>
+      <td>₹{{ o[3] }}</td>
+      <td>{{ o[4] }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <!-- VIEW CHARTS BUTTON -->
+  <br><br>
+  <button onclick="toggleCharts()">📊 View Product Charts</button>
+
+  <!-- CHARTS SECTION -->
+  <div id="chartsSection" style="display:none; margin-top:30px;">
+
+    {% for s in stats %}
+    <div class="glass" style="margin-bottom:30px;">
+      <h3>{{ s[0] }}</h3>
+
+      <p><b>Total Quantity Sold:</b> {{ s[1] }}</p>
+      <p><b>Total Revenue:</b> ₹{{ s[2] }}</p>
+
+      <canvas id="chart{{ loop.index }}"></canvas>
+    </div>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+<!-- CHART LOGIC -->
+<script>
+function toggleCharts(){
+  let sec = document.getElementById("chartsSection");
+  sec.style.display = (sec.style.display === "none") ? "block" : "none";
+}
+
+{% for s in stats %}
+new Chart(document.getElementById("chart{{ loop.index }}"), {
+  type: "bar",
+  data: {
+    labels: ["{{ s[0] }}"],
+    datasets: [{
+      label: "Quantity Sold",
+      data: [{{ s[1] }}],
+      backgroundColor: "#00ffd5"
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+{% endfor %}
+</script>
+
+</body>
+</html>
